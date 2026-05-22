@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="KeyWords is a handy browser extension for copying keywords from Shutterstock.">
+    <meta name="keywords" content="keywords, video, photo, image, footage, video footage, clip, vector, vector illustration, illustration, author, microstock author, photographer, videographer, cameraman, illustrator, designer, help, Chrome extension, Opera extension, Edge extension, browser plugin, contributor, keyword description, fast, speed, assistance, assistant, микросток, keywords shutterstock, копировать ключевые слова shutterstock, расширение для shutterstock, keywords extractor, стоковые ключевые слова, ключевые слова шаттерсток, language, multilingual">
+    <meta name="robots" content="index, follow">
+    <title>Extension KeyWords — Copying keywords from Shutterstock</title>
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Extension KeyWords — Copying keywords from Shutterstock">
+    <meta property="og:description" content="Instantly extract and copy keywords from any Shutterstock page (photos, vectors, illustrations, videos).">
+    <meta property="og:url" content="http://keywords.blinovinfo.ru">
+    <meta property="og:image" content="images/og.png">
+    <meta property="og:site_name" content="KeyWords">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Extension KeyWords — Copying keywords from Shutterstock">
+    <meta name="twitter:description" content="Instantly extract and copy keywords from any Shutterstock page (photos, vectors, illustrations, videos).">
+    <meta name="twitter:image" content="images/og.png">
+
+    <!-- favicon -->
+    <link rel="icon" type="image/png" href="/images/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/images/favicon.svg" />
+    <link rel="shortcut icon" href="/images/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="KeyWords Extension" />
+    <link rel="manifest" href="/images/site.webmanifest" />
+
+    <link href="bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="video.css">
+
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            background: #eef1f4;
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            color: #212529;
+        }
+        .wrapper {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 18px;
+        }
+        .card-box {
+            background: #fff;
+            border-radius: 18px;
+            border: 1px solid rgba(0,0,0,0.06);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+            overflow: hidden;
+            margin-bottom: 18px;
+        }
+
+        /* Navbar */
+        .navbar {
+            transition: all 0.4s ease;
+            background: transparent;
+            backdrop-filter: blur(0px);
+        }
+        .navbar.scrolled {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        /* HERO */
+        .hero {
+            background: linear-gradient(160deg, #1b138a, #040124);
+            color: #fff;
+            text-align: center;
+            padding: 130px 24px 60px;
+            position: relative;
+        }
+        .hero h1 {
+            font-size: 44px;
+            font-weight: 800;
+        }
+        .hero p {
+            max-width: 720px;
+            margin: 14px auto 0;
+            opacity: 0.85;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+        .hero-buttons {
+            margin-top: 24px;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn-hero {
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-size: 22px;
+        }
+        .scroll-down {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 23px;
+            animation: bounce 7s infinite;
+        }
+        @keyframes bounce {
+            0%, 20% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(15px); }
+            80%, 100% { transform: translateX(-50%) translateY(0); }
+        }
+
+        .text-muted { color: var(--bs-secondary-color) !important; }
+        .text-video {
+            color: var(--bs-secondary-color) !important;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        /* SECTION */
+        .section {
+            padding: 40px 24px;
+        }
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 18px;
+        }
+
+        /* FEATURE */
+        .feature {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 18px;
+            height: 100%;
+        }
+
+        /* STEPS */
+        .step {
+            padding: 14px;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            background: #fff;
+        }
+
+        /* DOWNLOAD STRIP */
+        .download-strip {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* FOOTER */
+        footer {
+            background: #0f172a;
+            color: #cbd5e1;
+            padding: 40px 20px;
+        }
+        .footer-grid {
+            max-width: 960px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .footer-social {
+            font-size: 29px;
+        }
+
+        footer a {
+            color: #cbd5e1;
+            text-decoration: none;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+        .small {
+            font-size: 14px;
+            opacity: 0.85;
+        }
+
+        /* Floating Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: #0066ff;
+            color: white;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 12px rgba(0,102,255,0.3);
+            z-index: 1000;
+            transition: all 0.3s;
+            border: none;
+        }
+        .back-to-top:hover {
+            background: #0052cc;
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 32px; }
+            .footer-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg fixed-top scrolled">
+    <div class="container">
+        <a class="navbar-brand text-white fw-bold" href="#">KeyWords</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link text-white" href="#advantages">Advantages</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="#how">How to use</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="#video">Video</a></li>
+                <li class="nav-item"><a class="nav-link text-white" href="#donate">Donation</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+    <h1>KeyWords</h1>
+    <p>Browser extension for quickly copying keywords from Shutterstock</p>
+    <div class="hero-buttons">
+        <a class="btn btn-primary btn-hero" href="https://chromewebstore.google.com/detail/danngdojdnkpienljijhcpjpdmaonmhj" target="_blank">
+            <i class="bi bi-browser-chrome"></i> Install for Chrome
+        </a>
+    </div>
+    <div class="small mt-3">
+        Works in Opera, Vivaldi, Edge, Brave and other Chromium browsers
+    </div>
+    <a href="#advantages" class="scroll-down">
+        <i class="bi bi-chevron-down"></i>
+    </a>
+</div>
+
+<div class="wrapper">
+
+    <!-- Advantages -->
+    <div id="advantages" class="section" style="padding: 20px 0px;">
+        <div class="row g-4">
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card-box advantage-card h-100" style="padding: 20px 20px; text-align: center;">
+                    <i class="bi bi-person-video3 display-4 text-primary mb-3"></i>
+                    <h5>For authors</h5>
+                    <p>Created specifically for contributors who need to quickly transfer keywords to other stocks.</p>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card-box advantage-card h-100" style="padding: 20px 20px; text-align: center;">
+                    <i class="bi bi-gift display-4 text-primary mb-3"></i>
+                    <h5>Completely free</h5>
+                    <p>The extension is free. You can support the developer with a donation if it helps with their work.</p>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card-box advantage-card h-100" style="padding: 20px 20px; text-align: center;">
+                    <i class="bi bi-arrow-repeat display-4 text-primary mb-3"></i>
+                    <h5>Updated regularly</h5>
+                    <p>Multi-language support, continuous improvements, and adaptation to changes.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HOW IT WORKS -->
+    <div id="how" class="card-box section">
+        <div class="section-title">How does this work</div>
+        <div class="step">1.Open any image, vector, illustration, or video on Shutterstock</div>
+        <div class="step">2. Click on the extension icon</div>
+        <div class="step">3. Click the "Get keywords" button</div>
+        <div class="step">4. Click "Copy" - done!</div>
+        <div class="mt-3 small text-muted">
+            It's very simple. Open the page → click on the extension → get and copy the keywords.
+        </div>
+    </div>
+
+    <!-- VIDEO -->
+    <div id="video" class="card-box section">
+        <div class="video video--enabled">
+            <a class="video__link">
+                <picture>
+                    <source srcset="https://i.ytimg.com/vi_webp/PxzQPvA6Ii0/maxresdefault.webp" type="image/webp">
+                    <img class="video__media" src="https://i.ytimg.com/vi/PxzQPvA6Ii0/maxresdefault.jpg" alt="Demonstration of work KeyWords">
+                </picture>
+            </a>
+            <button class="video__button" aria-label="Запустить видео">
+                <svg width="68" height="48" viewBox="0 0 68 48">
+                    <path class="video__button-shape" d="M66.52,7.74c-0.78-2.93-2.49-5.41-5.42-6.19C55.79,.13,34,0,34,0S12.21,.13,6.9,1.55 C3.97,2.33,2.27,4.81,1.48,7.74C0.06,13.05,0,24,0,24s0.06,10.95,1.48,16.26c0.78,2.93,2.49,5.41,5.42,6.19 C12.21,47.87,34,48,34,48s21.79-0.13,27.1-1.55c2.93-0.78,4.64-3.26,5.42-6.19C67.94,34.95,68,24,68,24S67.94,13.05,66.52,7.74z"></path>
+                    <path class="video__button-icon" d="M 45,24 27,14 27,34"></path>
+                </svg>
+            </button>
+        </div>
+        <p class="text-video">Clicking the play button will load the YouTube player.</p>
+    </div>
+
+    <!-- DOWNLOAD -->
+    <div class="card-box section text-center">
+        <div class="section-title">Download the extension</div>
+        <div class="download-strip">
+            <a class="btn btn-primary btn-hero" href="https://chromewebstore.google.com/detail/danngdojdnkpienljijhcpjpdmaonmhj" target="_blank">
+                <i class="bi bi-browser-chrome"></i> Chrome Web Store
+            </a>
+        </div>
+        <div class="small text-muted mt-3">
+            Works in Opera, Vivaldi, Edge, Brave, and other Chromium browsers.<br>This extension is not affiliated with Shutterstock.com.
+        </div>
+    </div>
+
+    <!-- DONATE -->
+    <div id="donate" class="card-box section">
+        <div class="section-title">Donate to the project</div>
+        <p>KeyWords is completely free. Your support helps us develop the extension and add new features.</p>
+        <div class="d-flex flex-wrap gap-3 justify-content-center">
+            <a class="btn btn-warning" href="https://dalink.to/binfo" target="_blank"><i class="bi bi-cup-hot"></i> DALink</a>
+            <a class="btn btn-outline-primary" href="/"><i class="bi bi-paypal"></i> PayPal</a>
+        </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="card-box section">
+        <div class="section-title">Frequently Asked Questions</div>
+        <div class="accordion" id="faq">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#q1">Is the extension free?</button>
+                </h2>
+                <div id="q1" class="accordion-collapse collapse" data-bs-parent="#faq">
+                    <div class="accordion-body">Yes, KeyWords is completely free. Donations are welcome to support development.</div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#q2">Does it only work on Shutterstock?</button>
+                </h2>
+                <div id="q2" class="accordion-collapse collapse" data-bs-parent="#faq">
+                    <div class="accordion-body">Currently, yes. Other stocks may be added based on user requests and with support.</div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#q3">Is the extension safe?</button>
+                </h2>
+                <div id="q3" class="accordion-collapse collapse" data-bs-parent="#faq">
+                    <div class="accordion-body">Yes. The extension doesn't collect personal data. Everything happens locally in your browser. However, this website may collect statistical data but does not share it with others.</div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#q4">What languages is the interface available in?</button>
+                </h2>
+                <div id="q4" class="accordion-collapse collapse" data-bs-parent="#faq">
+                    <div class="accordion-body">We support English, Russian, German, Spanish and French.</div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#q5">Which browsers are supported?</button>
+                </h2>
+                <div id="q5" class="accordion-collapse collapse" data-bs-parent="#faq">
+                    <div class="accordion-body">Any Chromium-based (Blink) browsers, including Chrome, Edge, Opera, Brave, Vivaldi, Yandex Browser, and others.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <div class="footer-social text-center mb-4">
+        <a href="https://vk.com/blinovapps" target="_blank"><i class="fa-brands fa-vk"></i></a>
+        <a href="https://www.facebook.com/blinovapps/" target="_blank"><i class="fa-brands fa-facebook"></i></a>
+    </div>
+    <hr style="opacity:0.1">
+    <div class="text-center small">
+        <p>This extension is an independent product and has no official affiliation with Shutterstock, Inc.</p>
+        <p>© 2026 Blinovinfo. All rights reserved.</p>
+    </div>
+</footer>
+
+<!-- Floating Back to Top -->
+<button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="back-to-top" id="backToTop">
+    <i class="bi bi-arrow-up"></i>
+</button>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="video.js"></script>
+<script>
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+        const navbar = document.querySelector('.navbar');
+        if (window.scrollY > 130) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+
+        // Floating button
+        const backToTop = document.getElementById('backToTop');
+        backToTop.style.display = window.scrollY > 300 ? 'flex' : 'none';
+    });
+</script>
+</body>
+</html>
